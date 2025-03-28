@@ -6,11 +6,17 @@ public class Jugador {
     //atributos
     private byte ingresoFicha;
     private byte totalAcierto;
+    private char fichaJugador;
 
     //constructor por defecto
     public Jugador() {
         this.ingresoFicha = 0;
         this.totalAcierto = 0;
+        this.fichaJugador = '-';
+    }
+
+    public Jugador(char fichaJugador) {
+        this.fichaJugador = fichaJugador;
     }
 
     //getters
@@ -20,6 +26,10 @@ public class Jugador {
 
     public byte getTotalAcierto() {
         return totalAcierto;
+    }
+
+    public char getFichaJugador() {
+        return fichaJugador;
     }
 
     //setters

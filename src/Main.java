@@ -6,9 +6,9 @@ public class Main {
     static final byte COLUMNAS = 7;
 
     //inicializo vector de posiciones libres en 0
-    public static void inicializacionVector(char[] pocisionLibre){
+    public static void inicializacionVector(int[] pocisionLibre){
         for (int i = 0; i <= COLUMNAS; i++){
-            pocisionLibre[i] = '0';
+            pocisionLibre[i] = 0;
         }
     }
 
@@ -29,8 +29,20 @@ public class Main {
     }
 
     //validacion del ingreso ficha del usuario
-    public static void ingresoFicha(){
+    public static void ingresoFicha(Jugador jugador1, Jugador jugador2,int[] posicionLibre,char[][] tablero){
 
+        //variables local
+        int fichaIngresada = jugador1.getIngresoFicha();
+        boolean estadoColumna = posicionLibre[fichaIngresada] >= 0;
+
+        //validacion de estado column
+        if (estadoColumna ){
+            for (byte fila = FILAS; fila <= FILAS; fila--){
+                if (tablero[fila][fichaIngresada] != '0'){
+                    tablero[fila][fichaIngresada] = jugador1.getFichaJugador();
+                }
+            }
+        }
     }
 
 
@@ -41,7 +53,7 @@ public class Main {
         boolean gameOver = false;
 
         //declaro arreglo
-        char[] posicionLibre= new char[COLUMNAS];
+        int[] posicionLibre= new int[COLUMNAS];
 
         //declaro matriz
         char[][] tablero = new char[FILAS][COLUMNAS];
@@ -50,8 +62,8 @@ public class Main {
         Scanner lector = new Scanner(System.in);
 
         //declaro nuevos jugadores
-        Jugador jugador1 = new Jugador();
-        Jugador jugador2 = new Jugador();
+        Jugador jugador1 = new Jugador('x');
+        Jugador jugador2 = new Jugador('o');
 //------------------------------------------------------------------------------
 
 //--------------------------inicializaciones ------------------------------------
