@@ -1,20 +1,20 @@
-public class Jugador {
-
-    //constantes
-    final int TOTAL_FICHAS = 21;
+public abstract class Jugador {
 
     //atributos
-    private byte ingresoFicha;
-    private byte totalAcierto;
+    protected byte ingresoFicha;
     private char fichaJugador;
+    private byte conexiones;
+
 
     //constructor por defecto
     public Jugador() {
-        this.ingresoFicha = 0;
-        this.totalAcierto = 0;
+        this.ingresoFicha = 0; //fichaIngreso
         this.fichaJugador = '-';
+        this.conexiones = 0;
+
     }
 
+    //constructor por parametro
     public Jugador(char fichaJugador) {
         this.fichaJugador = fichaJugador;
     }
@@ -24,20 +24,18 @@ public class Jugador {
         return ingresoFicha;
     }
 
-    public byte getTotalAcierto() {
-        return totalAcierto;
-    }
-
     public char getFichaJugador() {
         return fichaJugador;
     }
 
-    //setters
-    public void setIngresoFicha(byte ingresoFicha) {
-        this.ingresoFicha = ingresoFicha;
+    public byte getConexiones() {
+        return conexiones;
     }
 
-    public void setTotalAcierto(byte totalAcierto) {
-        this.totalAcierto = totalAcierto;
+    //setters
+    public void setConexiones(byte conexiones) {
+        this.conexiones = conexiones;
     }
+
+
 }
