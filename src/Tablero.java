@@ -1,4 +1,5 @@
-public class Tablero {
+public class Tablero  {
+
 
     //constantes
     final byte FILAS = 6;
@@ -50,10 +51,13 @@ public class Tablero {
         this.tablero = tablero;
     }
 
-    //---------------------------Validacione de juego ------------------------------------------------------
+   //metodo de ingreso ficha de jugador
+    public void ingresoFicha(){
+
+    }
 
 
-    //metodo que valida la posicion diagonal del
 
-    //
+
+
 }

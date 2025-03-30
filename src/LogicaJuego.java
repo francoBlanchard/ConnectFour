@@ -1,11 +1,9 @@
-public class LogicaJuego {
+public class LogicaJuego extends Jugador {
 
     //instancia
-    Jugador jugador;
     Tablero tableroPrincipal;
 
     //atributos
-    private int fichaTotal;
     private byte fichaIngreso;
     private char ficha;
     private byte filaActual;
@@ -15,10 +13,11 @@ public class LogicaJuego {
     private char[][] tablero;
 
     //constructor
-    public LogicaJuego() {
-        this.fichaTotal = fichaTotal;
-        this.fichaIngreso = jugador.getIngresoFicha();
-        this.ficha = jugador.getFichaJugador();
+    public LogicaJuego(Jugador jugador,Tablero tableroPrincipal) {
+        super();
+        this.tableroPrincipal = tableroPrincipal;
+        this.fichaIngreso = this.getIngresoFicha();
+        this.ficha = this.getFichaJugador();
         this.filaActual = 0;
         this.columnaActual = 0;
         this.conexiones = jugador.getConexiones();
@@ -46,28 +45,28 @@ public class LogicaJuego {
 
         //variables
         byte columna = this.columnaActual;
-        boolean condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna--] && !(this.conexiones == 4);
-        boolean condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna++] && !(this.conexiones == 4);
+        boolean condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (this.conexiones < 4);
+        boolean condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (this.conexiones < 4);
 
 
             //validacion Derecha
             while(condicionRecorridoDerecha){
                 this.conexiones++;
-                jugador.setConexiones(this.conexiones);
+                this.setConexiones(this.conexiones);
                 columna++;
 
                 //recalculo validaciones
-                condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna++] && !(this.conexiones == 4);
+                condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (this.conexiones < 4);
             }
 
             //validacion izqierda
             while(condicionRecorridoIzquierda ){
                 this.conexiones++;
-                jugador.setConexiones(this.conexiones);
+                this.setConexiones(this.conexiones);
                 columna--;
 
                 //recalculo validaciones
-                condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna--] && !(this.conexiones == 4);
+                condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (this.conexiones < 4);
             }
     }
 
@@ -76,28 +75,28 @@ public class LogicaJuego {
 
         //variables
         byte fila = this.filaActual;
-        boolean condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && !(this.conexiones == 4);
-        boolean condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && !(this.conexiones == 4);
+        boolean condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (this.conexiones < 4);
+        boolean condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (this.conexiones < 4);
 
 
         //validacion abajo
         while(condicionRecorridoAbajo){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila++;
 
             //recalculo validaciones
-            condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && !(this.conexiones == 4);
+            condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (this.conexiones < 4);
         }
 
         //validacion izqierda
         while(condicionRecorridoArriba ){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila--;
 
             //recalculo validaciones
-            condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && !(this.conexiones == 4);
+            condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (this.conexiones < 4);
         }
     }
 
@@ -107,54 +106,54 @@ public class LogicaJuego {
         //variables
         byte fila = this.filaActual;
         byte columna = this.columnaActual;
-        boolean RecorridoInferiorDerecha = (fila <= 6 & columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
-        boolean RecorridoInferiorIzquierda = (fila <= 6 & columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
-        boolean RecorridoSuperiorDerecha = (fila >= 0 & columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
-        boolean RecorridoSuperiorIzquierda = (fila >= 0 & columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
+        boolean RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && (this.conexiones < 4);
+        boolean RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && (this.conexiones < 4);
+        boolean RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && (this.conexiones < 4);
+        boolean RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && (this.conexiones < 4);
 
 
         //validacion inferior derecha
         while(RecorridoInferiorDerecha){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila++;
             columna++;
 
             //recalculo validaciones
-            RecorridoInferiorDerecha = (fila <= 6 & columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
+            RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila+1][columna+1] && (this.conexiones < 4);
         }
 
         //validacion inferior izquierda
         while(RecorridoInferiorIzquierda){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila++;
             columna--;
 
             //recalculo validaciones
-            RecorridoInferiorIzquierda = (fila <= 6 & columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
+            RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila+1][columna-1] && (this.conexiones < 4);
         }
 
         //validacion superior derecha
         while(RecorridoSuperiorDerecha){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila--;
             columna++;
 
             //recalculo validaciones
-            RecorridoSuperiorDerecha = (fila >= 0 & columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
+            RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila-1][columna+1] && (this.conexiones < 4);
         }
 
-        //validacion superior derecha
+        //validacion superior izquierda
         while(RecorridoSuperiorIzquierda){
             this.conexiones++;
-            jugador.setConexiones(this.conexiones);
+            this.setConexiones(this.conexiones);
             fila--;
             columna--;
 
             //recalculo validaciones
-            RecorridoSuperiorIzquierda = (fila >= 0 & columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(this.conexiones == 4);
+            RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila-1][columna-1] && (this.conexiones < 4);
         }
     }
 
