@@ -1,4 +1,4 @@
-public class ConectFour extends LogicaJuego implements Juego{
+/*public class ConectFour extends LogicaJuego implements Juego{
 
     //constructor
     public ConectFour() {
@@ -42,3 +42,4 @@ public class ConectFour extends LogicaJuego implements Juego{
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-public abstract class LogicaJuego {
+/*public abstract class LogicaJuego {
 
     //inyecciones
     Jugador jugador1;
@@ -179,4 +179,4 @@ public abstract class LogicaJuego {
         }
     }
 
-}
+}*/
