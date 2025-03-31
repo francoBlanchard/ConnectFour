@@ -3,6 +3,7 @@
     //inyecciones
     Jugador jugador1;
     Jugador jugador2;
+    Jugador jugadorActual;
     Tablero tableroPrincipal;
 
     //constantes
@@ -11,41 +12,40 @@
     final byte SET_TABLERO = 0;
 
     //atributos
-    private byte fichaIngreso;
-    private char ficha;
     private byte filaActual;
     private byte columnaActual;
-    private byte conexiones;
     private byte[] posicionLibre;
     private char[][] tablero;
 
     //constructor
-    public LogicaJuego() {
-        this.jugador1 = new Jugador1();
-        this.jugador2 = new Jugador2();
+    public LogicaJuego(Jugador jugador1, Jugador jugador2, Jugador jugadorActual, Tablero tableroPrincipal) {
+        this.jugador1 = jugador1;
+        this.jugador2 = jugador2;
+        this.jugadorActual = jugadorActual;
         this.posicionLibre = tableroPrincipal.getPosicionesLibres();
         this.tablero = tableroPrincipal.getTablero();
-        this.fichaIngreso = 0;
-        this.ficha = '-';
         this.filaActual = 0;
         this.columnaActual = 0;
-        this.conexiones = 0;
     }
+
+    //turno actual
+    private void turnoJugador(){
+        if (jugadorActual == jugador1){
+            jugadorActual = jugador2;
+        } else jugadorActual = jugador1;
+    }
+
 
 
     //-------------------VALIDACION DE FICHA INGRESADA-------------------------------------------------------
     //metodo que valida ficha ingresada
-    protected void validacionIngresoFicha(byte fichaIngreso, Jugador jugador){
+    protected void validacionIngresoFicha(){
+        this.filaActual = this.posicionLibre[jugadorActual.getPosicionFicha()];
 
-        //variables
-        byte posicionAsignada = this.posicionLibre[this.fichaIngreso];
-
-        if (this.posicionLibre[this.fichaIngreso] >=0){
-            tablero[posicionAsignada][this.fichaIngreso] = ficha;
+        if (this.filaActual >=0){
+            this.columnaActual = jugadorActual.getPosicionFicha();
+            tablero[this.filaActual][this.columnaActual] = jugadorActual.getFichaJugador();
         }
-
-        this.filaActual = posicionAsignada;
-        this.columnaActual = this.fichaIngreso;
     }
     //-------------------------------------------------------------------------------------------------------
 

@@ -1,24 +1,22 @@
 public class Jugador1 extends Jugador{
 
+    //atributos
+
 
     //constructor
     public Jugador1() {
-        this.fichaJugador= 'X';
-        this.posicionFicha = 0;
-        this.conexiones = 0;
+        super();
     }
 
-    //asigno posicion de ingreso
     @Override
-    public void ingresoPosicion( byte posicionFicha) {
-         this.posicionFicha =  posicionFicha;
+    protected void setFichaJugador(char fichaJugador) {
+        super.setFichaJugador('X');
     }
 
-    //actualizo conexiones realizadas
-    @Override
-    public void actualizoConexiones( byte conexiones) {
-        this.conexiones =  conexiones;
-    }
+    //getter
+/*    public char getFichaJugador() {
+        return fichaJugador;
+    }*/
 
     //mensaje
     @Override
