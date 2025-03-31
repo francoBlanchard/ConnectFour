@@ -1,34 +1,32 @@
-public class Tablero  {
-
+public class Tablero {
 
     //constantes
-    final byte FILAS = 6;
-    final byte COLUMNAS = 7;
-    final byte SET_TABLERO = 0;
+    static final byte FILAS = 6;
+    static final byte COLUMNAS = 6;
+    static final char SET_MATRIZ = '-';
 
     //atributos
     private byte[] posicionesLibres;
     private char[][] tablero;
 
-    //constructor por defecto
+    //constructor
     public Tablero() {
-        super();
-        this.posicionesLibres = new byte[FILAS];
+        this.posicionesLibres = new byte[COLUMNAS];
         this.tablero = new char[FILAS][COLUMNAS];
     }
 
-    //inicializo cada posicion del array en 6
+    //inicializo vector
     private void inicializoArray(){
-        for (int fila = 0; fila < FILAS; fila++) {
-            this.posicionesLibres[fila] = FILAS;
+        for(byte i = 0; i <= FILAS; i++){
+            this.posicionesLibres[i] = 0;
         }
     }
 
-    //inicializo cada posicion de la matriz en 0
+    //inicializo matriz
     private void inicializoMatriz(){
-        for (int fila = 0; fila < FILAS; fila++) {
-            for (int columna = 0; columna < COLUMNAS; columna++) {
-                this.tablero[fila][columna] = SET_TABLERO;
+        for(byte fila = 0; fila <= FILAS; fila++){
+            for(byte columna = 0; columna <= COLUMNAS; columna++){
+                this.tablero[fila][columna] = SET_MATRIZ;
             }
         }
     }
@@ -50,14 +48,4 @@ public class Tablero  {
     public void setTablero(char[][] tablero) {
         this.tablero = tablero;
     }
-
-   //metodo de ingreso ficha de jugador
-    public void ingresoFicha(){
-
-    }
-
-
-
-
-
 }

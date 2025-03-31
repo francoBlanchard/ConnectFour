@@ -1,7 +1,14 @@
-public class LogicaJuego extends Jugador {
+public abstract class LogicaJuego {
 
-    //instancia
+    //inyecciones
+    Jugador jugador1;
+    Jugador jugador2;
     Tablero tableroPrincipal;
+
+    //constantes
+    final byte FILAS = 6;
+    final byte COLUMNAS = 7;
+    final byte SET_TABLERO = 0;
 
     //atributos
     private byte fichaIngreso;
@@ -9,39 +16,46 @@ public class LogicaJuego extends Jugador {
     private byte filaActual;
     private byte columnaActual;
     private byte conexiones;
-    private byte[] posicionLibreTablero;
+    private byte[] posicionLibre;
     private char[][] tablero;
 
     //constructor
-    public LogicaJuego(Jugador jugador,Tablero tableroPrincipal) {
-        super();
-        this.tableroPrincipal = tableroPrincipal;
-        this.fichaIngreso = this.getIngresoFicha();
-        this.ficha = this.getFichaJugador();
+    public LogicaJuego() {
+        this.jugador1 = new Jugador1();
+        this.jugador2 = new Jugador2();
+        this.posicionLibre = tableroPrincipal.getPosicionesLibres();
+        this.tablero = tableroPrincipal.getTablero();
+        this.fichaIngreso = 0;
+        this.ficha = '-';
         this.filaActual = 0;
         this.columnaActual = 0;
-        this.conexiones = jugador.getConexiones();
-        this.posicionLibreTablero = tableroPrincipal.getPosicionesLibres();
-        this.tablero = tableroPrincipal.getTablero();
-
+        this.conexiones = 0;
     }
 
-    //metodo que valida ficha ingresada
-    private void validacionIngresoFicha(){
-        //variables
-        byte posicionAsignada = this.posicionLibreTablero[this.fichaIngreso];
 
-            if (this.posicionLibreTablero[this.fichaIngreso] >=0){
-                tablero[posicionAsignada][this.fichaIngreso] = ficha;
-                tableroPrincipal.setTablero(tablero);
-            }
+    //-------------------VALIDACION DE FICHA INGRESADA-------------------------------------------------------
+    //metodo que valida ficha ingresada
+    protected void validacionIngresoFicha(byte fichaIngreso, Jugador jugador){
+
+        //variables
+        byte posicionAsignada = this.posicionLibre[this.fichaIngreso];
+
+        if (this.posicionLibre[this.fichaIngreso] >=0){
+            tablero[posicionAsignada][this.fichaIngreso] = ficha;
+        }
 
         this.filaActual = posicionAsignada;
         this.columnaActual = this.fichaIngreso;
     }
+    //-------------------------------------------------------------------------------------------------------
 
+    //-------------------RECORRIDO ARRAY -------------------------------------------------------
+
+
+
+    //-------------------------------------------------------------------------------------------------------
     //recorro horizontalmente la matriz para comparar si se cumplen igualdades
-    private void validacionHorizontal(){
+    public void validacionHorizontal(Jugador jugador){
 
         //variables
         byte columna = this.columnaActual;
@@ -59,6 +73,7 @@ public class LogicaJuego extends Jugador {
                 condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (this.conexiones < 4);
             }
 
+        columna = this.columnaActual;
             //validacion izqierda
             while(condicionRecorridoIzquierda ){
                 this.conexiones++;
@@ -71,7 +86,7 @@ public class LogicaJuego extends Jugador {
     }
 
     //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
-    private void validacionVertical(){
+    protected void validacionVertical(){
 
         //variables
         byte fila = this.filaActual;
@@ -89,6 +104,7 @@ public class LogicaJuego extends Jugador {
             condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (this.conexiones < 4);
         }
 
+        fila = this.filaActual;
         //validacion izqierda
         while(condicionRecorridoArriba ){
             this.conexiones++;
@@ -101,7 +117,7 @@ public class LogicaJuego extends Jugador {
     }
 
     //recorro Diagonal la matriz para comparar si se cumplen igualdades
-    private void validacionDiagonal(){
+    protected void validacionDiagonal(){
 
         //variables
         byte fila = this.filaActual;
@@ -123,6 +139,8 @@ public class LogicaJuego extends Jugador {
             RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila+1][columna+1] && (this.conexiones < 4);
         }
 
+        fila = this.filaActual;
+        columna = this.columnaActual;
         //validacion inferior izquierda
         while(RecorridoInferiorIzquierda){
             this.conexiones++;
@@ -134,6 +152,8 @@ public class LogicaJuego extends Jugador {
             RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila+1][columna-1] && (this.conexiones < 4);
         }
 
+        fila = this.filaActual;
+        columna = this.columnaActual;
         //validacion superior derecha
         while(RecorridoSuperiorDerecha){
             this.conexiones++;
@@ -145,6 +165,8 @@ public class LogicaJuego extends Jugador {
             RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila-1][columna+1] && (this.conexiones < 4);
         }
 
+        fila = this.filaActual;
+        columna = this.columnaActual;
         //validacion superior izquierda
         while(RecorridoSuperiorIzquierda){
             this.conexiones++;
@@ -156,6 +178,5 @@ public class LogicaJuego extends Jugador {
             RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila-1][columna-1] && (this.conexiones < 4);
         }
     }
-
 
 }
