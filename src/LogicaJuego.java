@@ -34,13 +34,8 @@ public abstract class LogicaJuego {
             jugadorActual = jugador2;
         } else jugadorActual = jugador1;
     }
-
-
-
-    //-------------------VALIDACION DE FICHA INGRESADA-------------------------------------------------------
-    //metodo que valida ficha ingresada
-    protected void validacionIngresoFicha(){
-        turnoJugador();
+    //------------------------------------------------------------------------------------------------------
+    private void validaciongresoFicha(){
         this.filaActual = this.posicionLibre[jugadorActual.getPosicionFicha()];
 
         if (this.filaActual >=0){
@@ -48,16 +43,17 @@ public abstract class LogicaJuego {
             tablero[this.filaActual][this.columnaActual] = jugadorActual.getFichaJugador();
         }
     }
+
+    //-------------------VALIDACION DE FICHA INGRESADA-------------------------------------------------------
+    //metodo que valida ficha ingresada
+    public void posicionFichaInrgesada(){
+        turnoJugador();
+        validaciongresoFicha();
+    }
     //-------------------------------------------------------------------------------------------------------
 
-    //-------------------RECORRIDO ARRAY -------------------------------------------------------
-
-        //espacio para hacer private los recorridos y enviarlos para conservar el encapsulamiento
-
-    //-------------------------------------------------------------------------------------------------------
-    //recorro horizontalmente la matriz para comparar si se cumplen igualdades
-    public void validacionHorizontal(Jugador jugador){
-
+    //-------------------RECORRIDO Matriz -------------------------------------------------------
+    private void validacionHorizontal(){
         //variables
         byte columna = this.columnaActual;
         byte conexiones = 0;
@@ -65,30 +61,29 @@ public abstract class LogicaJuego {
         boolean condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
 
 
-            //validacion Derecha
-            while(condicionRecorridoDerecha){
-                conexiones++;
-                jugadorActual.setConexiones(conexiones);
-                columna++;
+        //validacion Derecha
+        while(condicionRecorridoDerecha){
+            conexiones++;
+            jugadorActual.setConexiones(conexiones);
+            columna++;
 
-                //recalculo validaciones
-                condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
-            }
+            //recalculo validaciones
+            condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
+        }
 
         columna = this.columnaActual;
-            //validacion izqierda
-            while(condicionRecorridoIzquierda ){
-                conexiones++;
-                jugadorActual.setConexiones(conexiones);
-                columna--;
+        //validacion izqierda
+        while(condicionRecorridoIzquierda ){
+            conexiones++;
+            jugadorActual.setConexiones(conexiones);
+            columna--;
 
-                //recalculo validaciones
-                condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (conexiones < 4);
-            }
+            //recalculo validaciones
+            condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (conexiones < 4);
+        }
     }
 
-    //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
-    protected void validacionVertical(){
+    private void validacionVertical(){
 
         //variables
         byte fila = this.filaActual;
@@ -117,6 +112,18 @@ public abstract class LogicaJuego {
             //recalculo validaciones
             condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
         }
+    }
+
+
+    //-------------------------------------------------------------------------------------------------------
+    //recorro horizontalmente la matriz para comparar si se cumplen igualdades
+    public void recorridoHorizontal(Jugador jugador) {
+        validacionHorizontal();
+    }
+
+    //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
+    public void recorridoVertical(){
+        validacionVertical();
     }
 
     //recorro Diagonal la matriz para comparar si se cumplen igualdades
