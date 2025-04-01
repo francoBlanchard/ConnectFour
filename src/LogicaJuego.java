@@ -52,14 +52,17 @@ public abstract class LogicaJuego {
     }
     //-------------------------------------------------------------------------------------------------------
 
-    //-------------------RECORRIDO Matriz -------------------------------------------------------
-    private void validacionHorizontal(){
-        //variables
-        byte columna = this.columnaActual;
-        byte conexiones = 0;
+    //-------------------validaciones-------------------------------------------------------
+    private void validacionHorizontal( byte columna,byte conexiones){
+
         boolean condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (conexiones < 4);
         boolean condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
 
+
+        //condicion para evaluar dos posiciones anteriores
+        if ((columna - 2) >= 0) {
+            columna -= 2;
+        } else columna -= 1;
 
         //validacion Derecha
         while(condicionRecorridoDerecha){
@@ -71,7 +74,12 @@ public abstract class LogicaJuego {
             condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
         }
 
+        //condicion para evaluar dos posiciones anteriores
         columna = this.columnaActual;
+        if ((columna + 2) <= 7) {
+            columna += 2;
+        } else columna += 1;
+
         //validacion izqierda
         while(condicionRecorridoIzquierda ){
             conexiones++;
@@ -83,14 +91,16 @@ public abstract class LogicaJuego {
         }
     }
 
-    private void validacionVertical(){
+    private void validacionVertical(byte fila,byte conexiones){
 
-        //variables
-        byte fila = this.filaActual;
-        byte conexiones = 0;
         boolean condicionRecorridoArriba = fila >= FILAS && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
         boolean condicionRecorridoAbajo = fila <= FILAS && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
 
+
+        //condicion para evaluar dos posiciones anteriores
+        if ((fila - 2) >= 0){
+            fila -= 2;
+        } else fila -= 1;
 
         //validacion abajo
         while(condicionRecorridoAbajo){
@@ -102,8 +112,14 @@ public abstract class LogicaJuego {
             condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
         }
 
+
+        //condicion para evaluar dos posiciones anteriores
         fila = this.filaActual;
-        //validacion izqierda
+        if ((fila + 2) <= 7  ){
+            fila += 2;
+        } else fila -= 1;
+
+        //validacion arriba
         while(condicionRecorridoArriba ){
             conexiones++;
             jugadorActual.setConexiones(conexiones);
@@ -114,25 +130,10 @@ public abstract class LogicaJuego {
         }
     }
 
-
-    //-------------------------------------------------------------------------------------------------------
-    //recorro horizontalmente la matriz para comparar si se cumplen igualdades
-    public void recorridoHorizontal(Jugador jugador) {
-        validacionHorizontal();
-    }
-
-    //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
-    public void recorridoVertical(){
-        validacionVertical();
-    }
-
     //recorro Diagonal la matriz para comparar si se cumplen igualdades
-    protected void validacionDiagonal(){
+    private void validacionDiagonal(byte fila, byte columna,byte conexiones){
 
-        //variables
-        byte fila = this.filaActual;
-        byte columna = this.columnaActual;
-        byte conexiones = 0;
+
         //revisar
         boolean RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && (conexiones < 4);
         boolean RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && (conexiones < 4);
@@ -189,6 +190,22 @@ public abstract class LogicaJuego {
             //recalculo validaciones
             RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila-1][columna-1] && (conexiones < 4);
         }
+    }
+
+    //-------------------------------------------------------------------------------------------------------
+    //recorro horizontalmente la matriz para comparar si se cumplen igualdades
+    public void recorridoHorizontal() {
+        validacionHorizontal(this.columnaActual, jugadorActual.getConexiones());
+    }
+
+    //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
+    public void recorridoVertical(){
+        validacionVertical(this.filaActual, jugadorActual.getConexiones());
+    }
+
+    //recorro Diagonal la matriz para comparar si se cumplen igualdades
+    public void recorridoDiagonal(){
+        validacionDiagonal(this.filaActual, this.columnaActual, jugadorActual.getConexiones());
     }
 
 }
