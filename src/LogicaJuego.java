@@ -1,4 +1,4 @@
-public abstract class LogicaJuego {
+public class LogicaJuego {
 
     //inyecciones
     Jugador jugador1;
@@ -35,7 +35,7 @@ public abstract class LogicaJuego {
         } else jugadorActual = jugador1;
     }
     //------------------------------------------------------------------------------------------------------
-    private void validaciongresoFicha(){
+    private void validaciongresoFicha(){//tiene que recibir la posicion de ingreso ficha
         this.filaActual = this.posicionLibre[jugadorActual.getPosicionFicha()];
 
         if (this.filaActual >=0){
@@ -60,9 +60,12 @@ public abstract class LogicaJuego {
 
 
         //condicion para evaluar dos posiciones anteriores
-        if ((columna - 2) >= 0) {
-            columna -= 2;
-        } else columna -= 1;
+        if (tablero[this.filaActual][columna] == tablero[this.filaActual][columna - 1]){
+            if(columna - 2 < 7){
+                columna -= 2;
+            }
+            else columna -= 1;
+        }
 
         //validacion Derecha
         while(condicionRecorridoDerecha){
@@ -75,10 +78,12 @@ public abstract class LogicaJuego {
         }
 
         //condicion para evaluar dos posiciones anteriores
-        columna = this.columnaActual;
-        if ((columna + 2) <= 7) {
-            columna += 2;
-        } else columna += 1;
+        if (tablero[this.filaActual][columna] == tablero[this.filaActual][columna + 1]){
+            if(columna + 2 > 7){
+                columna += 2;
+            }
+            else columna += 1;
+        }
 
         //validacion izqierda
         while(condicionRecorridoIzquierda ){
@@ -98,9 +103,12 @@ public abstract class LogicaJuego {
 
 
         //condicion para evaluar dos posiciones anteriores
-        if ((fila - 2) >= 0){
-            fila -= 2;
-        } else fila -= 1;
+        if (tablero[fila][this.columnaActual] == tablero[fila+1][this.columnaActual]){
+            if(fila + 2 < 6){
+                fila += 2;
+            }
+            else fila += 1;
+        }
 
         //validacion abajo
         while(condicionRecorridoAbajo){
@@ -115,9 +123,12 @@ public abstract class LogicaJuego {
 
         //condicion para evaluar dos posiciones anteriores
         fila = this.filaActual;
-        if ((fila + 2) <= 7  ){
-            fila += 2;
-        } else fila -= 1;
+        if (tablero[fila][this.columnaActual] == tablero[fila-1][this.columnaActual]){
+            if(fila - 2 > 0){
+                fila -= 2;
+            }
+            else fila -= 1;
+        }
 
         //validacion arriba
         while(condicionRecorridoArriba ){
@@ -140,7 +151,17 @@ public abstract class LogicaJuego {
         boolean RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones == 4);
         boolean RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones == 4);
 
-
+        //condicion para evaluar dos posiciones anteriores
+        if (tablero[fila][columna] == tablero[fila + 1][columna + 1]){
+            if((fila + 2) < 6 && (columna + 2) <7){
+                columna += 2;
+                fila += 2;
+            }
+            else {
+                columna += 1;
+                fila += 1;
+            }
+        }
         //validacion inferior derecha
         while(RecorridoInferiorDerecha){
             conexiones++;
