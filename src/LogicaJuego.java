@@ -1,232 +1,97 @@
 public class LogicaJuego {
 
-    //inyecciones
-    Jugador jugador1;
-    Jugador jugador2;
-    Jugador jugadorActual;
-    Tablero tableroPrincipal;
+    // Dependencias inyectadas
+    private Jugador jugador1;
+    private Jugador jugador2;
+    private Jugador jugadorActual;
+    private Tablero tableroPrincipal;
 
-    //constantes
-    final byte FILAS = 6;
-    final byte COLUMNAS = 7;
-    final byte SET_TABLERO = 0;
+    // Constantes
+    private static final byte FILAS = 6;
+    private static final byte COLUMNAS = 7;
+    private static final byte CONEXIONES_PARA_GANAR = 4;
 
-    //atributos
+    // Atributos
     private byte filaActual;
     private byte columnaActual;
-    private byte[] posicionLibre;
+    private byte[] posicionesLibres;
     private char[][] tablero;
 
-    //constructor
+    // Constructor
     public LogicaJuego(Jugador jugador1, Jugador jugador2, Jugador jugadorActual, Tablero tableroPrincipal) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
         this.jugadorActual = jugadorActual;
-        this.posicionLibre = tableroPrincipal.getPosicionesLibres();
+        this.tableroPrincipal = tableroPrincipal;
+        this.posicionesLibres = tableroPrincipal.getPosicionesLibres();
         this.tablero = tableroPrincipal.getTablero();
-        this.filaActual = 0;
-        this.columnaActual = 0;
     }
 
-    //turno actual
-    private void turnoJugador(){
-        if (jugadorActual == jugador1){
-            jugadorActual = jugador2;
-        } else jugadorActual = jugador1;
+    // Cambia al siguiente jugador
+    private void cambiarTurno() {
+        jugadorActual = (jugadorActual == jugador1) ? jugador2 : jugador1;
     }
-    //------------------------------------------------------------------------------------------------------
-    private void validaciongresoFicha(){//tiene que recibir la posicion de ingreso ficha
-        this.filaActual = this.posicionLibre[jugadorActual.getPosicionFicha()];
 
-        if (this.filaActual >=0){
-            this.columnaActual = jugadorActual.getPosicionFicha();
-            tablero[this.filaActual][this.columnaActual] = jugadorActual.getFichaJugador();
+    // Intenta colocar la ficha en la columna seleccionada
+    private void colocarFichaSiEsPosible() {
+        byte columna = jugadorActual.getPosicionFicha();
+        byte fila = posicionesLibres[columna];
+
+        if (fila >= 0) {
+            tablero[fila][columna] = jugadorActual.getFichaJugador();
+            this.filaActual = fila;
+            this.columnaActual = columna;
         }
     }
 
-    //-------------------VALIDACION DE FICHA INGRESADA-------------------------------------------------------
-    //metodo que valida ficha ingresada
-    public void posicionFichaInrgesada(){
-        turnoJugador();
-        validaciongresoFicha();
+    // Procesa el turno actual: cambia jugador y coloca ficha
+    public void procesarTurno() {
+        cambiarTurno();
+        colocarFichaSiEsPosible();
     }
-    //-------------------------------------------------------------------------------------------------------
 
-    //-------------------validaciones-------------------------------------------------------
-    private void validacionHorizontal( byte columna,byte conexiones){
+    // Recorre horizontalmente el tablero para buscar conexiones
+    public void recorrerHorizontal() {
+        validarConexiones(0, 1);   // derecha
+        validarConexiones(0, -1);  // izquierda
+    }
 
-        boolean condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (conexiones < 4);
-        boolean condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
+    // Recorre verticalmente el tablero para buscar conexiones
+    public void recorrerVertical() {
+        validarConexiones(1, 0);   // abajo
+        validarConexiones(-1, 0);  // arriba
+    }
 
+    // Recorre en diagonal el tablero para buscar conexiones
+    public void recorrerDiagonal() {
+        validarConexiones(1, 1);    // inferior derecha
+        validarConexiones(1, -1);   // inferior izquierda
+        validarConexiones(-1, 1);   // superior derecha
+        validarConexiones(-1, -1);  // superior izquierda
+    }
 
-        //condicion para evaluar dos posiciones anteriores
-        if (tablero[this.filaActual][columna] == tablero[this.filaActual][columna - 1]){
-            if(columna - 2 < 7){
-                columna -= 2;
-            }
-            else columna -= 1;
-        }
+    // Valida conexiones en una dirección específica (usado por todas las direcciones)
+    private void validarConexiones(int deltaFila, int deltaColumna) {
+        byte conexiones = 1; // Incluye la ficha actual
+        byte fila = filaActual;
+        byte columna = columnaActual;
+        char ficha = jugadorActual.getFichaJugador();
 
-        //validacion Derecha
-        while(condicionRecorridoDerecha){
+        // Movimiento hacia una dirección
+        fila += deltaFila;
+        columna += deltaColumna;
+
+        while (estaEnRango(fila, columna) && tablero[fila][columna] == ficha && conexiones < CONEXIONES_PARA_GANAR) {
             conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            columna++;
-
-            //recalculo validaciones
-            condicionRecorridoDerecha = columna <= 7 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna+1] && (conexiones < 4);
+            fila += deltaFila;
+            columna += deltaColumna;
         }
 
-        //condicion para evaluar dos posiciones anteriores
-        if (tablero[this.filaActual][columna] == tablero[this.filaActual][columna + 1]){
-            if(columna + 2 > 7){
-                columna += 2;
-            }
-            else columna += 1;
-        }
-
-        //validacion izqierda
-        while(condicionRecorridoIzquierda ){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            columna--;
-
-            //recalculo validaciones
-            condicionRecorridoIzquierda = columna >= 0 && tablero[this.filaActual][columna] == tablero[this.filaActual][columna-1] && (conexiones < 4);
-        }
+        jugadorActual.setConexiones(conexiones);
     }
 
-    private void validacionVertical(byte fila,byte conexiones){
-
-        boolean condicionRecorridoArriba = fila >= FILAS && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
-        boolean condicionRecorridoAbajo = fila <= FILAS && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
-
-
-        //condicion para evaluar dos posiciones anteriores
-        if (tablero[fila][this.columnaActual] == tablero[fila+1][this.columnaActual]){
-            if(fila + 2 < 6){
-                fila += 2;
-            }
-            else fila += 1;
-        }
-
-        //validacion abajo
-        while(condicionRecorridoAbajo){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila++;
-
-            //recalculo validaciones
-            condicionRecorridoAbajo = fila <= 6 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
-        }
-
-
-        //condicion para evaluar dos posiciones anteriores
-        fila = this.filaActual;
-        if (tablero[fila][this.columnaActual] == tablero[fila-1][this.columnaActual]){
-            if(fila - 2 > 0){
-                fila -= 2;
-            }
-            else fila -= 1;
-        }
-
-        //validacion arriba
-        while(condicionRecorridoArriba ){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila--;
-
-            //recalculo validaciones
-            condicionRecorridoArriba = fila >= 0 && tablero[fila][this.columnaActual] == tablero[fila][this.columnaActual] && (conexiones < 4);
-        }
+    // Verifica si una celda está dentro del rango del tablero
+    private boolean estaEnRango(int fila, int columna) {
+        return fila >= 0 && fila < FILAS && columna >= 0 && columna < COLUMNAS;
     }
-
-    //recorro Diagonal la matriz para comparar si se cumplen igualdades
-    private void validacionDiagonal(byte fila, byte columna,byte conexiones){
-
-
-        //revisar
-        boolean RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones== 4);
-        boolean RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones == 4);
-        boolean RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones == 4);
-        boolean RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila][columna] && !(conexiones == 4);
-
-        //condicion para evaluar dos posiciones anteriores
-        if (tablero[fila][columna] == tablero[fila + 1][columna + 1]){
-            if((fila + 2) < 6 && (columna + 2) <7){
-                columna += 2;
-                fila += 2;
-            }
-            else {
-                columna += 1;
-                fila += 1;
-            }
-        }
-        //validacion inferior derecha
-        while(RecorridoInferiorDerecha){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila++;
-            columna++;
-
-            //recalculo validaciones
-            RecorridoInferiorDerecha = (fila <= 6 && columna <=7) && tablero[fila][columna] == tablero[fila+1][columna+1] && (conexiones < 4);
-        }
-
-        fila = this.filaActual;
-        columna = this.columnaActual;
-        //validacion inferior izquierda
-        while(RecorridoInferiorIzquierda){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila++;
-            columna--;
-
-            //recalculo validaciones
-            RecorridoInferiorIzquierda = (fila <= 6 && columna >=0) && tablero[fila][columna] == tablero[fila+1][columna-1] && (conexiones < 4);
-        }
-
-        fila = this.filaActual;
-        columna = this.columnaActual;
-        //validacion superior derecha
-        while(RecorridoSuperiorDerecha){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila--;
-            columna++;
-
-            //recalculo validaciones
-            RecorridoSuperiorDerecha = (fila >= 0 && columna <=7) && tablero[fila][columna] == tablero[fila-1][columna+1] && (conexiones < 4);
-        }
-
-        fila = this.filaActual;
-        columna = this.columnaActual;
-        //validacion superior izquierda
-        while(RecorridoSuperiorIzquierda){
-            conexiones++;
-            jugadorActual.setConexiones(conexiones);
-            fila--;
-            columna--;
-
-            //recalculo validaciones
-            RecorridoSuperiorIzquierda = (fila >= 0 && columna >=0) && tablero[fila][columna] == tablero[fila-1][columna-1] && (conexiones < 4);
-        }
-    }
-
-    //-------------------------------------------------------------------------------------------------------
-    //recorro horizontalmente la matriz para comparar si se cumplen igualdades
-    public void recorridoHorizontal() {
-        validacionHorizontal(this.columnaActual, jugadorActual.getConexiones());
-    }
-
-    //recorro Diagonalmente la matriz para comparar si se cumplen igualdades
-    public void recorridoVertical(){
-        validacionVertical(this.filaActual, jugadorActual.getConexiones());
-    }
-
-    //recorro Diagonal la matriz para comparar si se cumplen igualdades
-    public void recorridoDiagonal(){
-        validacionDiagonal(this.filaActual, this.columnaActual, jugadorActual.getConexiones());
-    }
-
 }
