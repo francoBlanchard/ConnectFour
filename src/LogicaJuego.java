@@ -56,7 +56,7 @@ public class LogicaJuego {
         validarConexiones(0, -1);  // izquierda
     }
 
-    // Recorre verticalmente el tablero para buscar conexiones
+    // Recorre verticalmente el tablero para buscar conexioness
     public void recorrerVertical() {
         validarConexiones(1, 0);   // abajo
         validarConexiones(-1, 0);  // arriba
